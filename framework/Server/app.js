@@ -1,11 +1,11 @@
-import WebSlate, { assets } from './__webassets';
-import createError from 'http-errors';
-import express, { json, urlencoded, static } from 'express';
-import { join } from 'path';
-import cookieParser from 'cookie-parser';
-import logger from 'morgan';
-import { fs } from 'fs';
-import { system } from './system';
+
+var httperrors = require('http-errors');
+var express = require('express');
+var path = require('path');
+var cookieParser = require('cookie-parser');
+var logger = require('morgan');
+var fs = require('fs');
+var system = require('./system');
 
 var app = express();
 
@@ -15,32 +15,23 @@ var app = express();
 app.set('view engine', 'ejs');
 
 app.use(logger('dev'));
-app.use(json());
-app.use(urlencoded({ extended: false }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(static(join(__dirname, '/../../')));
+app.use(express.static(path.join(__dirname, '/../../')));
 
-app.use(function(req, res, next) {
-  res.send(fs.readFileSync(join(__dirname,'/../../pages/render.html'),'utf-8'))
+app.get(function(req, res) {
+  res.send(fs.readFileSync(join(__dirname,'/../Client/render.html'),'utf-8'))
 });
 app.get('/', function (req, res) {
   res.send(assets.__render(system.__read()))
 })
 
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  res.send(fs.readFileSync(join(__dirname,'/../../pages/render.html'),'utf-8'))
-});
 
 // error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
-  res.status(err.status || 500);
-  res.send('error');
+//The 404 Route (ALWAYS Keep this as the last route)
+app.get('*', function(req, res){
+  res.status(404).send(fs.readFileSync(path.join(__dirname,'/../Client/render.html'),'utf-8'));
 });
 
-export default app;
+module.exports = app;

@@ -1,4 +1,4 @@
-export var system = {}
+var system = {}
 system.__read = function (__filePath){
     const __file = fs.readFileSync(path.join(__dirname,__filePath),'utf-8');
     return __file;
@@ -32,7 +32,7 @@ system.config = function(configLocaction){
         var configFile = this.__mutiLineRead(configLocaction)
         global[config] = {}
         for(var counter = 0;counter < configFile.length;counter++){
-            config[config[counter].split("=")[0]] = config[counter].split("=")[1]
+            config[config[counter].split(" = ")[0]] = config[counter].split(" = ")[1]
 
         }
     }else{
@@ -44,3 +44,4 @@ system.setConfig = function(){
     var configLocation = process.argv[3];
     console.log("The config file is located at "+configLocaction)
 }
+module.exports = system

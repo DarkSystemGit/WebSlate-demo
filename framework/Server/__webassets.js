@@ -3,7 +3,7 @@ import * as fs from 'fs'
 import * as path from 'path'
 import * as JSDOM from 'jsdom'
 import { system } from './system.js';
-export var assets = {}
+var assets = {}
 assets.setup = function(){
   var configLocation = process.argv[3];
   system.config(configLocation);
@@ -64,10 +64,10 @@ assets.__getAllDirFiles = function (dirPath, arrayOfFiles) {
   }
 
 assets.__getJsx = function (){
-    for(let __counter = 0;__counter < this.__getAllDirFiles(system.config()["componentsLocation"]).length;__counter++){
-      const __jsxFileNames = this.__getAllDirFiles(system.config()["componentsLocation"]);
+    for(let __counter = 0;__counter < this.__getAllDirFiles("./../../"+system.config()["componentsLocation"]).length;__counter++){
+      const __jsxFileNames = this.__getAllDirFiles("./../../"+system.config()["componentsLocation"]);
       var __jsxFiles = [];
-      var __file = system.__read(path.join(system.config()["componentsLocation"],__jsxFileNames[counter]));
+      var __file = system.__read(path.join("./../../"+system.config()["componentsLocation"],__jsxFileNames[counter]));
       __jsxFiles.push[__file]
     };
     return __jsxFiles;  
@@ -84,9 +84,9 @@ assets.__compileJsx = function (jsx,prams){
 }
 assets.__avalibleComponents = function(){
   var __components = {};
-  let __files = this.__getAllDirFiles(system.config()["componentsLocation"]);
+  let __files = this.__getAllDirFiles("./../../"+system.config()["componentsLocation"]);
   for(var i=0;i<files.length;i++){
-    let __file = system.__read(path.join(system.config()["componentsLocation"],__files[i]));
+    let __file = system.__read(path.join("./../../"+system.config()["componentsLocation"],__files[i]));
     let __tempname = __file.split('{')[1];
     let __rawCode = __tempname.split('}')[1];
     let __code = __rawCode.split('\\n');
@@ -108,3 +108,4 @@ assets.__render = function(pageCode){
     page = page.replace(UsedCompsKeys[counter],__components[UsedCompsKeys[counter]])
   };
 }
+module.exports = assets
