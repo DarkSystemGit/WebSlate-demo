@@ -1,5 +1,3 @@
-
-var httperrors = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
@@ -26,8 +24,11 @@ app.get(function(req, res) {
 app.get('/', function (req, res) {
   res.send(assets.__render(system.__read()))
 })
-
-
+//The Page route
+//This route displays data retutned by assets.render()
+app.get('/Page', function(req, res){
+  res.send(assets.__render(req.query.page))
+});
 // error handler
 //The 404 Route (ALWAYS Keep this as the last route)
 app.get('*', function(req, res){
