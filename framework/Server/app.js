@@ -4,6 +4,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var fs = require('fs');
 var system = require('./system');
+var assets = require('./__webassets')
 
 var app = express();
 
@@ -21,12 +22,10 @@ app.use(express.static(path.join(__dirname, '/../../')));
 app.get(function(req, res) {
   res.send(fs.readFileSync(join(__dirname,'/../Client/render.html'),'utf-8'))
 });
-app.get('/', function (req, res) {
-  res.send(assets.__render(system.__read()))
-})
 //The Page route
 //This route displays data retutned by assets.render()
 app.get('/Page', function(req, res){
+  system.setConfig()
   res.send(assets.__render(req.query.page))
 });
 // error handler

@@ -1,8 +1,7 @@
-
-import * as fs from 'fs'
-import * as path from 'path'
-import * as JSDOM from 'jsdom'
-import { system } from './system.js';
+const fs = require('fs');
+const path = require('path');
+const JSDOM = require('jsdom')
+const system = require('./system');
 var assets = {}
 assets.setup = function(){
   var configLocation = process.argv[3];
@@ -48,12 +47,13 @@ assets.__getUsedComponents = function(componentJsx){
   return this.__search(componentJsx,avilblecomps);
 }
 assets.__getAllDirFiles = function (dirPath, arrayOfFiles) {
-    files = fs.readdirSync(path.join(__dirname,dirPath))
+    console.log("working"+path.join(__dirname+dirPath))
+    files = fs.readdirSync(__dirname+dirPath)
   
     arrayOfFiles = arrayOfFiles || []
   
     files.forEach(function(file) {
-      if (fs.statSync(path.join(__dirname,dirPath) + "/" + file).isDirectory()) {
+      if (fs.statSync(__dirname+dirPath + "/" + file).isDirectory()) {
         arrayOfFiles = this.__getAllDirFiles(dirPath + "/" + file, arrayOfFiles)
       } else {
         arrayOfFiles.push(file)
@@ -64,10 +64,10 @@ assets.__getAllDirFiles = function (dirPath, arrayOfFiles) {
   }
 
 assets.__getJsx = function (){
-    for(let __counter = 0;__counter < this.__getAllDirFiles("./../../"+system.config()["componentsLocation"]).length;__counter++){
-      const __jsxFileNames = this.__getAllDirFiles("./../../"+system.config()["componentsLocation"]);
+    for(let __counter = 0;__counter < this.__getAllDirFiles("/../../"+system.config()["componentsLocation"].toString()).length;__counter++){
+      const __jsxFileNames = this.__getAllDirFiles("/../../"+system.config()["componentsLocation"].toString());
       var __jsxFiles = [];
-      var __file = system.__read(path.join("./../../"+system.config()["componentsLocation"],__jsxFileNames[counter]));
+      var __file = system.__read(path.join("/../../"+system.config()["componentsLocation"].toString(),__jsxFileNames[counter]));
       __jsxFiles.push[__file]
     };
     return __jsxFiles;  
@@ -84,9 +84,11 @@ assets.__compileJsx = function (jsx,prams){
 }
 assets.__avalibleComponents = function(){
   var __components = {};
-  let __files = this.__getAllDirFiles("./../../"+system.config()["componentsLocation"]);
+  var componentsPath = "/../../"+system.config()["componentsLocation"].toString()
+  console.log("Path: "+componentsPath)
+  let __files = this.__getAllDirFiles(componentsPath);
   for(var i=0;i<files.length;i++){
-    let __file = system.__read(path.join("./../../"+system.config()["componentsLocation"],__files[i]));
+    let __file = system.__read(path.join(componentsPath,__files[i]));
     let __tempname = __file.split('{')[1];
     let __rawCode = __tempname.split('}')[1];
     let __code = __rawCode.split('\\n');
